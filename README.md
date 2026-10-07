@@ -1,4 +1,4 @@
-# BloodSync 🩸
+# BloodSync 
 
 **AI-Powered Blood Bank Inventory Management System**
 
