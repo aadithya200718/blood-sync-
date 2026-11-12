@@ -103,11 +103,11 @@ const AICopilot: React.FC = () => {
             <Radio className="w-4 h-4 text-rose-400 animate-pulse" />
             <span className="font-mono text-xs text-slate-400 uppercase tracking-widest">NEURAL COPILOT AGENTS</span>
           </div>
-          <h2 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          <h2 className="font-editorial text-3xl sm:text-4xl text-white tracking-tight font-normal">
             Autonomous Decision Support
           </h2>
           <p className="text-slate-400 text-xs sm:text-sm mt-1">
-            Multi-agent architecture trained on Paper 10 and real-time cold-chain invariants.
+            Multi-agent architecture trained on clinical reasoning and real-time cold-chain invariants.
           </p>
         </div>
 

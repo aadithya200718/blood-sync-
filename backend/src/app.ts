@@ -11,6 +11,8 @@ import requestRoutes from './routes/requestRoutes';
 import alertRoutes from './routes/alertRoutes';
 import auditRoutes from './routes/auditRoutes';
 import analyticsRoutes from './routes/analyticsRoutes';
+import notificationRoutes from './routes/notificationRoutes';
+import patientPortalRoutes from './routes/patientPortalRoutes';
 
 const app = express();
 
@@ -54,6 +56,8 @@ app.use('/api/requests', requestRoutes);
 app.use('/api/alerts', alertRoutes);
 app.use('/api/audit', auditRoutes);
 app.use('/api/analytics', analyticsRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/patient', patientPortalRoutes);
 
 // Global Error Handler
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

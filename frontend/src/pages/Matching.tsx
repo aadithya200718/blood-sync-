@@ -30,14 +30,24 @@ const Matching: React.FC = () => {
   const [actionError, setActionError] = useState('');
   const [processingUnitId, setProcessingUnitId] = useState('');
 
-  // Crossmatch modal
+  // Crossmatch modal (Explicit human verification; not defaulted to Compatible)
   const [crossmatchModalUnit, setCrossmatchModalUnit] = useState<string | null>(null);
-  const [crossmatchResult, setCrossmatchResult] = useState<'Compatible' | 'Incompatible'>('Compatible');
+  const [crossmatchResult, setCrossmatchResult] = useState<'Compatible' | 'Incompatible' | null>(null);
+
+  useEffect(() => {
+    const reqId = searchParams.get('requestId');
+    if (reqId) {
+      setSelectedRequestId(reqId);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     requestsApi.getAll().then((res) => {
       setAllRequests(res.data || []);
-      if (!selectedRequestId && res.data && res.data.length > 0) {
+      const reqId = searchParams.get('requestId');
+      if (reqId) {
+        setSelectedRequestId(reqId);
+      } else if (!selectedRequestId && res.data && res.data.length > 0) {
         setSelectedRequestId(res.data[0].request_id);
       }
     }).catch(console.error);
@@ -122,7 +132,10 @@ const Matching: React.FC = () => {
   };
 
   const handleSaveCrossmatch = async () => {
-    if (!crossmatchModalUnit) return;
+    if (!crossmatchModalUnit || !crossmatchResult) {
+      setActionError('Validation error: Please select a verified crossmatch result (Compatible or Incompatible).');
+      return;
+    }
     try {
       setActionError('');
       await requestsApi.recordCrossmatch(selectedRequestId, {
@@ -130,6 +143,7 @@ const Matching: React.FC = () => {
         result: crossmatchResult
       });
       setCrossmatchModalUnit(null);
+      setCrossmatchResult(null);
       setActionSuccess(`Crossmatch result for ${crossmatchModalUnit} saved as ${crossmatchResult}.`);
       loadMatchData(selectedRequestId);
     } catch (err: any) {
@@ -157,11 +171,11 @@ const Matching: React.FC = () => {
             <GitMerge className="w-4 h-4 text-rose-400" />
             <span className="font-mono text-xs text-slate-400 uppercase tracking-widest">ALGORITHMIC COMPATIBILITY ENGINE</span>
           </div>
-          <h2 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          <h2 className="font-editorial text-3xl sm:text-4xl text-white tracking-tight font-normal">
             Matching & Allocation Engine
           </h2>
           <p className="text-slate-400 text-xs sm:text-sm mt-1">
-            Deterministic serological compatibility, FEFO prioritization, and Paper 10 ML wastage optimization.
+            Deterministic serological compatibility, FEFO prioritization, and ML wastage optimization.
           </p>
         </div>
 
@@ -543,12 +557,18 @@ const Matching: React.FC = () => {
               <h3 className="text-sm font-display font-bold text-white">Record Crossmatch Result</h3>
             </div>
             
+            <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-[10px] font-mono text-amber-300">
+              SIMULATION ONLY: Benchmark Laboratory Serological Crossmatch Testing
+            </div>
+
             <p className="text-xs font-mono text-slate-300">
               Unit: <strong className="text-white">{crossmatchModalUnit}</strong> for request <strong className="text-white">{selectedRequestId}</strong>
             </p>
 
             <div className="space-y-2">
-              <label className="text-xs font-mono uppercase tracking-wider text-slate-400">Serological Reaction Outcome:</label>
+              <label className="text-xs font-mono uppercase tracking-wider text-slate-400">
+                Serological Reaction Outcome (Required):
+              </label>
               <div className="grid grid-cols-2 gap-3">
                 <button
                   type="button"
@@ -578,7 +598,10 @@ const Matching: React.FC = () => {
             <div className="flex justify-end gap-2 pt-4 border-t border-white/[0.08]">
               <button
                 type="button"
-                onClick={() => setCrossmatchModalUnit(null)}
+                onClick={() => {
+                  setCrossmatchModalUnit(null);
+                  setCrossmatchResult(null);
+                }}
                 className="btn-secondary text-xs"
               >
                 Cancel
@@ -586,7 +609,8 @@ const Matching: React.FC = () => {
               <button
                 type="button"
                 onClick={handleSaveCrossmatch}
-                className="btn-primary text-xs"
+                disabled={!crossmatchResult}
+                className="btn-primary text-xs disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 Sign Off Crossmatch
               </button>

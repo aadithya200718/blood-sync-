@@ -99,7 +99,7 @@ const Issuance: React.FC = () => {
             </span>
             <span className="text-xs text-slate-500 font-mono">FDA 21 CFR §606 Compliant</span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white font-display">
+          <h1 className="font-editorial text-3xl sm:text-4xl text-white tracking-tight font-normal">
             Blood Unit Issuance & Clinical Release Ledger
           </h1>
           <p className="text-slate-400 text-sm mt-1">

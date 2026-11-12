@@ -13,10 +13,13 @@ const router = Router();
 
 router.use(authenticate);
 
-router.get('/', getAlerts);
-router.put('/:id/acknowledge', rbac(['Technician', 'Manager', 'Admin']), acknowledgeAlert);
-router.put('/:id/resolve', rbac(['Technician', 'Manager', 'Admin']), resolveAlert);
+const staffRoles = ['Technician', 'Manager', 'Admin', 'Auditor'];
+const editRoles = ['Technician', 'Manager', 'Admin'];
+
+router.get('/', rbac(staffRoles), getAlerts);
+router.put('/:id/acknowledge', rbac(editRoles), acknowledgeAlert);
+router.put('/:id/resolve', rbac(editRoles), resolveAlert);
 router.put('/:id/dismiss', rbac(['Manager', 'Admin']), dismissAlert);
-router.post('/run-checks', rbac(['Technician', 'Manager', 'Admin']), runChecks);
+router.post('/run-checks', rbac(editRoles), runChecks);
 
 export default router;

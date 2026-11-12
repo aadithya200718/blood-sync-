@@ -4,11 +4,7 @@
 
 @layer base {
   body {
-    @apply bg-[#07080B] text-slate-100 font-sans selection:bg-brand-600/30 selection:text-rose-200;
-    background-image: 
-      radial-gradient(ellipse 80% 50% at 50% -20%, rgba(225, 29, 72, 0.08), transparent 70%),
-      radial-gradient(ellipse 60% 40% at 90% 90%, rgba(56, 189, 248, 0.04), transparent 60%);
-    background-attachment: fixed;
+    @apply bg-[#09090B] text-slate-100 font-sans selection:bg-brand-600/30 selection:text-rose-200 antialiased;
   }
 
   /* Custom Slim Dark Scrollbars */
@@ -17,7 +13,7 @@
     height: 6px;
   }
   ::-webkit-scrollbar-track {
-    background: #0B0D12;
+    background: #09090B;
   }
   ::-webkit-scrollbar-thumb {
     background: #1F2533;
@@ -29,6 +25,45 @@
 }
 
 @layer components {
+  /* Editorial Typography Styles */
+  .font-editorial {
+    font-family: "Instrument Serif", Georgia, serif;
+    letter-spacing: -0.02em;
+  }
+
+  .text-editorial-headline {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+
+  /* Agiloft Section Compositions */
+  .section-ivory {
+    background-color: #F8F6F1;
+    color: #17191D;
+  }
+
+  .section-dark {
+    background-color: #09090B;
+    color: #F8F6F1;
+  }
+
+  /* Geometric Wireframe Grid Overlays */
+  .bg-grid-subtle {
+    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  }
+
+  .bg-grid-ivory {
+    background-size: 48px 48px;
+    background-image: 
+      linear-gradient(to right, rgba(23, 25, 29, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(23, 25, 29, 0.04) 1px, transparent 1px);
+  }
+
   /* Luxury Frosted Panels */
   .glass-panel {
     @apply bg-[#0F1117]/85 backdrop-blur-xl border border-white/[0.08] shadow-vault-card rounded-2xl;
@@ -44,11 +79,27 @@
 
   /* Interactive Luxury Buttons */
   .btn-primary {
-    @apply px-4 py-2.5 bg-gradient-to-r from-brand-600 to-rose-600 hover:from-brand-500 hover:to-rose-500 text-white font-medium rounded-xl transition-all duration-200 shadow-glow-crimson hover:shadow-lg hover:shadow-rose-600/30 active:scale-[0.98] border border-white/10 disabled:opacity-50 disabled:pointer-events-none;
+    @apply px-5 py-2.5 bg-gradient-to-r from-brand-600 via-rose-600 to-rose-700 hover:from-brand-500 hover:via-rose-500 hover:to-rose-600 text-white font-medium rounded-xl transition-all duration-200 shadow-glow-crimson hover:shadow-lg hover:shadow-rose-600/30 active:scale-[0.98] border border-white/10 disabled:opacity-50 disabled:pointer-events-none;
   }
   
   .btn-secondary {
-    @apply px-4 py-2.5 bg-[#151923] hover:bg-[#1C212E] text-slate-200 hover:text-white font-medium rounded-xl border border-white/[0.08] hover:border-white/20 transition-all duration-200 shadow-sm active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+    @apply px-5 py-2.5 bg-[#151923] hover:bg-[#1C212E] text-slate-200 hover:text-white font-medium rounded-xl border border-white/[0.08] hover:border-white/20 transition-all duration-200 shadow-sm active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none;
+  }
+
+  .btn-minimal-dark {
+    @apply px-6 py-3 rounded-xl bg-white text-black font-semibold text-sm hover:bg-slate-100 transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98];
+  }
+
+  .btn-minimal-outline {
+    @apply px-6 py-3 rounded-xl bg-transparent text-white font-medium text-sm border border-white/20 hover:border-white/40 hover:bg-white/[0.04] transition-all duration-200 active:scale-[0.98];
+  }
+
+  .btn-ivory-dark {
+    @apply px-6 py-3 rounded-xl bg-[#17191D] text-white font-medium text-sm hover:bg-black transition-all duration-200 shadow-md active:scale-[0.98];
+  }
+
+  .btn-ivory-outline {
+    @apply px-6 py-3 rounded-xl bg-transparent text-[#17191D] font-medium text-sm border border-[#17191D]/25 hover:border-[#17191D]/60 hover:bg-[#17191D]/[0.03] transition-all duration-200 active:scale-[0.98];
   }
 
   .btn-danger {
@@ -102,4 +153,3 @@
     @apply px-4 py-3.5 text-sm text-slate-200;
   }
 }
-

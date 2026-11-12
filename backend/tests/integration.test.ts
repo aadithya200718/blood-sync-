@@ -267,6 +267,13 @@ async function runAllTests() {
       body: { unit_id: testUnitId }
     });
 
+    // C.5: Laboratory Crossmatch (Required by clinical safety invariant before issuance)
+    const crossmatchRes = await fetchJson(`/requests/${testReqId}/crossmatch`, {
+      method: 'POST',
+      headers: authHeaders,
+      body: { unit_id: testUnitId, result: 'Compatible' }
+    });
+
     // D: Issue unit
     const issueRes = await fetchJson(`/requests/${testReqId}/issue`, {
       method: 'POST',
@@ -278,6 +285,7 @@ async function runAllTests() {
       createRes.status === 201 &&
       matchRes.status === 200 &&
       reserveRes.status === 200 &&
+      crossmatchRes.status === 201 &&
       issueRes.status === 200;
 
     results.push({

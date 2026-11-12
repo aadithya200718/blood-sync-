@@ -123,7 +123,7 @@ const Donors: React.FC = () => {
             </span>
             <span className="text-xs text-slate-500 font-mono">Voluntary Donor Network</span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white font-display">
+          <h1 className="font-editorial text-3xl sm:text-4xl text-white tracking-tight font-normal">
             Donor Registry & Accession Protocol
           </h1>
           <p className="text-slate-400 text-sm mt-1">

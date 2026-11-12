@@ -112,11 +112,11 @@ const Dashboard: React.FC = () => {
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span className="font-mono text-xs text-slate-400 uppercase tracking-widest">REAL-TIME INVENTORY STREAM</span>
           </div>
-          <h2 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          <h2 className="font-editorial text-3xl sm:text-4xl text-white tracking-tight font-normal">
             Operational Command Center
           </h2>
-          <p className="text-slate-400 text-xs sm:text-sm mt-1">
-            Automated FEFO dispatch, algorithmic crossmatch safety invariants, and cold-chain compliance.
+          <p className="text-slate-400 text-xs sm:text-sm mt-1 max-w-2xl">
+            Automated FEFO dispatch, algorithmic crossmatch safety invariants, and continuous cold-chain compliance.
           </p>
         </div>
         <div className="flex items-center gap-3">

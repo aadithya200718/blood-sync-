@@ -46,9 +46,14 @@ export const processAutomatedJobs = async () => {
         await db.query(`UPDATE reservations SET status = 'Expired' WHERE reservation_id = ?`, [
           res.reservation_id
         ]);
-        await db.query(`UPDATE blood_units SET status = 'AVAILABLE' WHERE unit_id = ?`, [
-          res.unit_id
-        ]);
+        // Safely restore blood unit to AVAILABLE only if currently RESERVED and not expired.
+        // Never restore an ISSUED unit to AVAILABLE!
+        await db.query(
+          `UPDATE blood_units 
+           SET status = 'AVAILABLE', updated_at = NOW() 
+           WHERE unit_id = ? AND status = 'RESERVED' AND expiry_date > CURRENT_DATE`,
+          [res.unit_id]
+        );
         await createAuditEntry({
           action: 'RESERVATION_AUTO_EXPIRED',
           entity_type: 'reservations',

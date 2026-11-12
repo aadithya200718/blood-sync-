@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Plus, Search, Filter, Hospital, Activity, User, CheckCircle2, ArrowRight } from 'lucide-react';
-import { patientsApi } from '../services/api';
+import { Plus, Search, Filter, Hospital, Activity, User, CheckCircle2, ArrowRight, ShieldCheck, AlertTriangle } from 'lucide-react';
+import { patientsApi, fetchApi } from '../services/api';
 import { Link } from 'react-router-dom';
 
 const Patients: React.FC = () => {
@@ -21,25 +21,45 @@ const Patients: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [msg, setMsg] = useState('');
 
-  const loadPatients = async () => {
+  const loadPatients = async (silent: boolean = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       const res = await patientsApi.getAll({
         search: search || undefined,
         blood_group: bloodGroupFilter || undefined
       });
       setPatients(res.data || []);
-      setCurrentPage(1);
     } catch (err) {
       console.error(err);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadPatients();
-  }, [bloodGroupFilter]);
+    let isMounted = true;
+    loadPatients(false);
+
+    // Phase 4: Auto-synchronize patient registry every 2 seconds
+    const interval = setInterval(() => {
+      if (isMounted) loadPatients(true);
+    }, 2000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [bloodGroupFilter, search]);
+
+  const handleVerifyPatient = async (patientId: number) => {
+    try {
+      const res = await fetchApi(`/patients/${patientId}/verify`, { method: 'PUT' });
+      setMsg(`Patient ${res.data?.name || patientId} blood group confirmed and clinically verified.`);
+      loadPatients(true);
+    } catch (e: any) {
+      alert(e.message || 'Verification failed');
+    }
+  };
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,7 +95,7 @@ const Patients: React.FC = () => {
             </span>
             <span className="text-xs text-slate-500 font-mono">Clinical Transfusion Dossier</span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white font-display">
+          <h1 className="font-editorial text-3xl sm:text-4xl text-white tracking-tight font-normal">
             Recipient Clinical Registry & Dossiers
           </h1>
           <p className="text-slate-400 text-sm mt-1">
@@ -172,6 +192,7 @@ const Patients: React.FC = () => {
                 <th className="px-5 py-3.5 font-semibold">Patient ID</th>
                 <th className="px-5 py-3.5 font-semibold">Recipient Full Name</th>
                 <th className="px-5 py-3.5 font-semibold">Blood Phenotype</th>
+                <th className="px-5 py-3.5 font-semibold">Clinical Verification</th>
                 <th className="px-5 py-3.5 font-semibold">Hospital Facility</th>
                 <th className="px-5 py-3.5 font-semibold">Enrolled Date</th>
                 <th className="px-5 py-3.5 font-semibold text-right">Transfusion Order</th>
@@ -180,14 +201,14 @@ const Patients: React.FC = () => {
             <tbody className="divide-y divide-white/[0.04]">
               {loading ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-slate-400">
+                  <td colSpan={7} className="px-6 py-12 text-center text-slate-400">
                     <div className="inline-block w-6 h-6 border-2 border-rose-500/20 border-t-rose-500 rounded-full animate-spin mb-2"></div>
                     <p className="font-mono text-xs">Accessing clinical recipient database...</p>
                   </td>
                 </tr>
               ) : patients.length === 0 ? (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-slate-500 font-mono text-xs">
+                  <td colSpan={7} className="px-6 py-12 text-center text-slate-500 font-mono text-xs">
                     No recipient profiles found.
                   </td>
                 </tr>
@@ -209,6 +230,29 @@ const Patients: React.FC = () => {
                       <span className="inline-block px-2.5 py-0.5 rounded-md font-bold text-xs bg-rose-500/10 text-rose-300 border border-rose-500/20 font-mono">
                         {patient.blood_group}
                       </span>
+                    </td>
+                    <td className="px-5 py-3.5">
+                      {patient.is_verified ? (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                          <ShieldCheck className="w-3 h-3 text-emerald-400" />
+                          Verified
+                        </span>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                            <AlertTriangle className="w-3 h-3 text-amber-400" />
+                            Self-Reported
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleVerifyPatient(patient.patient_id)}
+                            className="px-2 py-0.5 rounded text-[10px] font-mono bg-brand-600/30 hover:bg-brand-600/60 text-rose-200 border border-brand-500/30 transition-all"
+                            title="Verify and clinically authorize patient blood group"
+                          >
+                            Verify
+                          </button>
+                        </div>
+                      )}
                     </td>
                     <td className="px-5 py-3.5 text-xs text-slate-300">
                       <div className="flex items-center gap-1.5">

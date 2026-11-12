@@ -25,27 +25,39 @@ const Requests: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const loadRequests = async () => {
+  const loadRequests = async (silent: boolean = false) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
       const res = await requestsApi.getAll({
         search: search || undefined,
         status: statusFilter || undefined,
         urgency: urgencyFilter || undefined
       });
       setRequests(res.data || []);
-      setCurrentPage(1);
     } catch (err: any) {
       console.error(err);
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadRequests();
-    patientsApi.getAll().then(res => setPatients(res.data || [])).catch(console.error);
-  }, [statusFilter, urgencyFilter]);
+    let isMounted = true;
+    loadRequests(false);
+    patientsApi.getAll().then(res => {
+      if (isMounted) setPatients(res.data || []);
+    }).catch(console.error);
+
+    // Phase 7: Real-time request polling every 2 seconds
+    const interval = setInterval(() => {
+      if (isMounted) loadRequests(true);
+    }, 2000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [statusFilter, urgencyFilter, search]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -115,7 +127,7 @@ const Requests: React.FC = () => {
             <Activity className="w-4 h-4 text-rose-400" />
             <span className="font-mono text-xs text-slate-400 uppercase tracking-widest">CLINICAL DEMAND STREAM</span>
           </div>
-          <h2 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          <h2 className="font-editorial text-3xl sm:text-4xl text-white tracking-tight font-normal">
             Blood Requests & Allocation Queue
           </h2>
           <p className="text-slate-400 text-xs sm:text-sm mt-1">

@@ -19,21 +19,24 @@ const router = Router();
 
 router.use(authenticate);
 
-// View listings
-router.get('/', getRequests);
-router.get('/reservations/all', getAllReservations);
-router.get('/issuances/all', getAllIssuances);
-router.get('/:id', getRequestById);
+const staffRoles = ['Technician', 'Manager', 'Admin', 'Auditor'];
+const editRoles = ['Technician', 'Manager', 'Admin'];
+
+// View listings (Staff only)
+router.get('/', rbac(staffRoles), getRequests);
+router.get('/reservations/all', rbac(staffRoles), getAllReservations);
+router.get('/issuances/all', rbac(staffRoles), getAllIssuances);
+router.get('/:id', rbac(staffRoles), getRequestById);
 
 // Create and update request lifecycle
-router.post('/', rbac(['Technician', 'Manager', 'Admin']), createRequest);
-router.put('/:id/status', rbac(['Technician', 'Manager', 'Admin']), updateRequestStatus);
+router.post('/', rbac(editRoles), createRequest);
+router.put('/:id/status', rbac(editRoles), updateRequestStatus);
 
 // Clinical actions: match, crossmatch, reserve, issue, release
-router.get('/:id/match', rbac(['Technician', 'Manager', 'Admin']), matchRequest);
-router.post('/:id/crossmatch', rbac(['Technician', 'Manager', 'Admin']), recordCrossmatch);
-router.post('/:id/reserve', rbac(['Technician', 'Manager', 'Admin']), reserveUnit);
-router.post('/:id/issue', rbac(['Technician', 'Manager', 'Admin']), issueUnit);
-router.delete('/:id/reserve/:unitId', rbac(['Technician', 'Manager', 'Admin']), cancelReservation);
+router.get('/:id/match', rbac(editRoles), matchRequest);
+router.post('/:id/crossmatch', rbac(editRoles), recordCrossmatch);
+router.post('/:id/reserve', rbac(editRoles), reserveUnit);
+router.post('/:id/issue', rbac(editRoles), issueUnit);
+router.delete('/:id/reserve/:unitId', rbac(editRoles), cancelReservation);
 
 export default router;

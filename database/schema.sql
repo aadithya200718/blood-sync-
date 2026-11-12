@@ -13,7 +13,7 @@ CREATE TABLE users (
     status ENUM('Active', 'Inactive', 'Suspended') DEFAULT 'Active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
+        
 -- 2. donors
 CREATE TABLE donors (
     donor_id INT AUTO_INCREMENT PRIMARY KEY,

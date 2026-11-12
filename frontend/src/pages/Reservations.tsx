@@ -117,7 +117,7 @@ const Reservations: React.FC = () => {
             <Lock className="w-4 h-4 text-amber-400" />
             <span className="font-mono text-xs text-slate-400 uppercase tracking-widest">PRE-ISSUANCE ALLOCATION</span>
           </div>
-          <h2 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          <h2 className="font-editorial text-3xl sm:text-4xl text-white tracking-tight font-normal">
             Unit Reservations & Time-Lock Vault
           </h2>
           <p className="text-slate-400 text-xs sm:text-sm mt-1">

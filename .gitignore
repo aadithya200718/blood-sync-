@@ -95,3 +95,7 @@ logs/
 # Database local storage & dumps
 *.sqlite3
 *.db
+*.dump
+*.sql.bak
+backup_*.sql
+database/backup_*.sql

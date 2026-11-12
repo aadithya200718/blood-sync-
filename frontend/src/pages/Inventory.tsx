@@ -122,7 +122,7 @@ const Inventory: React.FC = () => {
             <ThermometerSnowflake className="w-4 h-4 text-cyan-400" />
             <span className="font-mono text-xs text-slate-400 uppercase tracking-widest">COLD-CHAIN REPOSITORY</span>
           </div>
-          <h2 className="font-display text-2xl sm:text-3xl font-bold text-white tracking-tight">
+          <h2 className="font-editorial text-3xl sm:text-4xl text-white tracking-tight font-normal">
             Cryogenic & Cell Inventory Vault
           </h2>
           <p className="text-slate-400 text-xs sm:text-sm mt-1">

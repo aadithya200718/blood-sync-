@@ -126,6 +126,28 @@ export const analyticsApi = {
   getInventory: () => fetchApi('/analytics/inventory'),
 };
 
+// --- Patient Portal API ---
+export const patientApi = {
+  getProfile: () => fetchApi('/patient/profile'),
+  getRequests: () => fetchApi('/patient/requests'),
+  createRequest: (data: { component_type?: string; quantity?: number; urgency?: string; idempotency_key?: string }) =>
+    fetchApi('/patient/requests', { method: 'POST', body: JSON.stringify(data) }),
+  cancelRequest: (requestId: string) =>
+    fetchApi(`/patient/requests/${requestId}/cancel`, { method: 'POST' }),
+  register: (data: { name: string; email: string; password: string; blood_group: string; hospital?: string }) =>
+    fetchApi('/auth/register', { method: 'POST', body: JSON.stringify(data) }),
+};
+
+// --- Notifications API ---
+export const notificationsApi = {
+  getAll: (params?: { unread?: boolean }) => {
+    const query = new URLSearchParams(params as any).toString();
+    return fetchApi(`/notifications${query ? `?${query}` : ''}`);
+  },
+  markAsRead: (id: number) => fetchApi(`/notifications/${id}/read`, { method: 'PUT' }),
+  acknowledgeAll: () => fetchApi('/notifications/acknowledge-all', { method: 'POST' }),
+};
+
 // --- AI Service Direct Client ---
 export const aiApi = {
   getInventoryInsight: async () => {
