@@ -216,6 +216,8 @@ async function runAllTests() {
   // 9. Blood Unit Accessioning
   const testUnitId = `TEST-UNIT-${Date.now()}`;
   try {
+    const todayDate = new Date().toISOString().split('T')[0];
+    const futureExpiry = new Date(Date.now() + 35 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
     const res = await fetchJson('/inventory/unit', {
       method: 'POST',
       headers: authHeaders,
@@ -224,8 +226,8 @@ async function runAllTests() {
         donor_id: testDonorId || 1,
         blood_group: 'O+',
         component_type: 'Red Blood Cells',
-        collection_date: '2026-09-20',
-        expiry_date: '2026-10-31',
+        collection_date: todayDate,
+        expiry_date: futureExpiry,
         storage_location: 'Test Rack A'
       }
     });
@@ -305,6 +307,8 @@ async function runAllTests() {
   try {
     // Add another fresh unit to test concurrency
     const concUnitId = `CONC-UNIT-${Date.now()}`;
+    const concExpiry = new Date(Date.now() + 35 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const concCollection = new Date().toISOString().split('T')[0];
     await fetchJson('/inventory/unit', {
       method: 'POST',
       headers: authHeaders,
@@ -313,8 +317,8 @@ async function runAllTests() {
         donor_id: 1,
         blood_group: 'A+',
         component_type: 'Red Blood Cells',
-        collection_date: '2026-09-20',
-        expiry_date: '2026-10-31',
+        collection_date: concCollection,
+        expiry_date: concExpiry,
         storage_location: 'Rack Conc'
       }
     });

@@ -34,8 +34,9 @@ echo    • Backend Express API : http://localhost:3000/api/health
 echo    • Agentic AI Service  : http://localhost:8000
 echo.
 echo  TEST CREDENTIALS (Password: password123 for all):
+echo    • Patient       : patient.demo@bloodsync.test
+echo    • Lab Technician: tech.demo@bloodsync.test (or john@bloodsync.local)
 echo    • Admin User    : admin@bloodsync.local
-echo    • Technician    : john@bloodsync.local
 echo    • Operations Mgr: sarah@bloodsync.local
 echo    • Auditor       : auditor@bloodsync.local
 echo.
