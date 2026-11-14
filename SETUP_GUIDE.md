@@ -1,6 +1,6 @@
 # BloodSync - Quick Setup Guide
 
-## 🚀 Quick Start (5 Minutes)
+ 🚀 Quick Start (5 Minutes)
 
 ### Prerequisites Check
 ```powershell
